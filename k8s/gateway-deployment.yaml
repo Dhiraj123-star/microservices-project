@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment  
+metadata:
+  name: gateway-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          image: gateway-service:latest
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 8000
+          env:
+          - name: REDIS_HOST
+            value: "redis-master"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+---
+apiVersion: v1
+kind: Service 
+metadata: 
+  name: gateway-service
+spec:
+  selector: 
+    app: gateway
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: NodePort # Allows us to access it from outside the cluster
