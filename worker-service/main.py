@@ -4,7 +4,8 @@ import time
 import sys # Import sys
 
 REDIS_HOST = os.getenv("REDIS_HOST", "redis-master")
-db = redis.Redis(host=REDIS_HOST, port=6379, decode_responses=True)
+REDIS_PORT = int(os.getenv("REDIS_PORT",6379))
+db = redis.Redis(host=REDIS_HOST, port=REDIS_PORT, decode_responses=True)
 
 def process_tasks():
     # Adding flush=True ensures the message hits the console immediately
