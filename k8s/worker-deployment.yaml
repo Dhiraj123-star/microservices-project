@@ -25,4 +25,12 @@ spec:
               cpu: "500m"
           env:
             - name: REDIS_HOST
-              value: "redis-master"
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-config
+                  key: REDIS_HOST
+            - name: REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: redis-config
+                  key: REDIS_PORT
