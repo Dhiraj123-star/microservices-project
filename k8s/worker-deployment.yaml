@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: worker
-          image: worker-service:latest
-          imagePullPolicy: Never
+          image: dhiraj918106/worker-service:latest
+          imagePullPolicy: Always
           resources:
             requests:
               memory: "128Mi"
