@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: gateway-service:latest
-          imagePullPolicy: Never
+          image: dhiraj918106/gateway-service:latest
+          imagePullPolicy: Always
           ports:
           - containerPort: 8000
           env:
