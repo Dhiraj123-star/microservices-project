@@ -8,13 +8,16 @@ This project demonstrates a decoupled microservices architecture using **FastAPI
 * **Gateway Service**: A public-facing API that accepts tasks and pushes them to Redis.
 * **Message Queue**: A Redis instance (StatefulSet) acting as the message broker.
 * **Worker Service**: A background consumer that pulls tasks from Redis and processes them asynchronously.
+* **CI/CD Pipeline**: Automated builds via **GitHub Actions** that push images to **Docker Hub** (`dhiraj918106`).
+* **Centralized Config**: Uses **Kubernetes ConfigMaps** to manage environment variables (Redis Host/Port) across all services.
 * **Real-time Logging**: Unbuffered logging enabled to monitor background tasks instantly.
 
 ## 📂 Project Structure
 
+* `.github/workflows/`: CI/CD pipeline definitions.
 * `gateway-service/`: FastAPI application (The Producer).
 * `worker-service/`: Python background script (The Consumer).
-* `k8s/`: Kubernetes manifests for Redis, Gateway, and Worker.
+* `k8s/`: Kubernetes manifests for Redis, Gateway, Worker, and ConfigMaps.
 
 ## 🛠️ How to Interact with the API
 
@@ -47,12 +50,12 @@ curl "<URL>/submit-task?task_name=SendWelcomeEmail" -X POST
 * **Gateway**: Responds instantly (the user doesn't wait).
 * **Worker**: Picks up the task, waits 5 seconds (simulated work), and logs the completion.
 
-## 🔍 Verify Messages in Redis
+## ⚙️ Configuration Management
 
-If the worker is stopped, you can see pending tasks in the "tasks" list:
+Environment variables are managed via the `redis-config` ConfigMap. To update the Redis host or port cluster-wide:
 
 ```bash
-kubectl exec -it redis-master-0 -- redis-cli LRANGE tasks 0 -1
+kubectl edit configmap redis-config
 
 ```
 
