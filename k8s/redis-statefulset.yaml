@@ -21,8 +21,26 @@ spec:
       containers:
       - name: master
         image: redis:6.2-alpine
+        # We must tell Redis to start with the requirepass flag using shell expansion
+        command: ["/bin/sh", "-c", "redis-server --requirepass $REDIS_PASSWORD"]
         ports:
         - containerPort: 6379
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-auth
+              key: redis-password
+        # Added Readiness Probe to ensure services only connect when Redis is ready
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - -a
+            - $(REDIS_PASSWORD)
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 10
         resources:
           requests:
             cpu: 100m
